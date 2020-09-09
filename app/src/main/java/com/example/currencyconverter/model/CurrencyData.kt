@@ -1,8 +1,8 @@
 package com.example.currencyconverter.model
 
 data class CurrencyData(
-    val base: String,
-    val rates: Rates,
+    val valid: Boolean,
     val updated: Int,
-    val valid: Boolean
+    val base: String,
+    val rates: Rates
 )

@@ -4,66 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent2"
     tools:context=".fragments.ConvertFragment">
 
-    <TextView
-        android:id="@+id/base_currency_value_converter"
-        android:layout_width="140dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="5.76"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/convert_currency_value_converter"
-        app:layout_constraintEnd_toStartOf="@+id/base_currency_converter"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/base_currency_converter"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:text="US Dollar"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/convert_currency_converter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/base_currency_value_converter"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/convert_currency_value_converter"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:text="3.76"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/convert_currency_converter"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/base_currency_value_converter" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/convert_currency_converter"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:text="Turkish Lira"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/convert_currency_value_converter"
-        app:layout_constraintTop_toBottomOf="@+id/base_currency_converter" />
+        <LinearLayout
+            android:id="@+id/line1_converter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/base_currency_value_converter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="5.76"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="normal"
+                android:fontFamily="serif"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/base_currency_converter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="USD"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="normal"
+                android:fontFamily="serif"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/switch_button_converter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_switched_60"
+            android:background="@color/colorAccent2"
+            android:layout_below="@+id/line1_converter"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar_converter"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@+id/line1_converter"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"/>
+
+       <LinearLayout
+           android:id="@+id/line2_converter"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:padding="10dp"
+           android:layout_below="@+id/switch_button_converter"
+           android:orientation="horizontal">
+
+           <TextView
+               android:id="@+id/convert_currency_value_converter"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:text="3.76"
+               android:textColor="@android:color/black"
+               android:textSize="22sp"
+               android:textStyle="normal"
+               android:fontFamily="serif"
+               android:gravity="center"/>
+
+           <TextView
+               android:id="@+id/convert_currency_converter"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:text="Turkish Lira"
+               android:textColor="@android:color/black"
+               android:textSize="22sp"
+               android:textStyle="normal"
+               android:fontFamily="serif"
+               android:gravity="center"/>
+
+       </LinearLayout>
+
+    </RelativeLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
