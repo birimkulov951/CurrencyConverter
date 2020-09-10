@@ -24,10 +24,18 @@ class ConvertFragment : Fragment() {
     private lateinit var retService: RetrofitService
 
     // Main vars
-    private var baseCurrency: String = "USD"
-    private var baseCurrencyValue: Double? = 1.0
-    private var convertCurrency: String = "KGS"
-    private var convertCurrencyValue: Double? = 1.0
+    private var mBaseCurrency: Int = 0
+    private var mBaseCurrencyValue: Double? = 1.0
+    private var mConvertCurrency: Int = 0
+    private var mConvertCurrencyValue: Double? = null
+    private var baseSpinnerStr: String? = null
+    private var convertSpinnerStr: String? = null
+
+
+    // Arrays for spinner
+    private var currencies = arrayOf("United States Dollar","United Arab Emirates Dirham","Armenian Dram","Australian Dollar","Azerbaijani Manat",
+        "Bitcoin Cash","Bulgarian Lev","Bitcoin","Cuban Convertible Peso","Czech Republic Koruna","EOS","Ethereum","Euro","Indonesian Rupiah",
+        "Israeli New Sheqel","Japanese Yen","Kyrgystani Som","Kazakhstani Tenge","Polish Zloty","Turkish Lira","Silver (troy ounce)","Gold (troy ounce)")
 
     // Helpers
     private var isSwitchButtonPressed: Boolean = false
@@ -42,52 +50,66 @@ class ConvertFragment : Fragment() {
         // Inflate the layout for this fragment
         val view : View =  inflater.inflate(R.layout.fragment_convert, container, false)
 
-        var base_currency_converter: TextView = view.findViewById(R.id.base_currency_converter)
-        var base_currency_value_converter: TextView = view.findViewById(R.id.base_currency_value_converter)
-        var convert_currency_converter: TextView = view.findViewById(R.id.convert_currency_converter)
-        var convert_currency_value_converter: TextView = view.findViewById(R.id.convert_currency_value_converter)
-        val switch_button_converter: ImageButton = view.findViewById(R.id.switch_button_converter)
-        //val progress_bar_converter: ProgressBar = view.findViewById(R.id.progress_bar_converter)
+        // if i do not initialize this views i get IllegalStateException
+        val baseCurrencyConverterSpinner: Spinner = view.findViewById(R.id.base_currency_converter_spinner)
+        val baseCurrencyValueConverter: TextView = view.findViewById(R.id.base_currency_value_converter)
+        val convertCurrencyConverterSpinner: Spinner = view.findViewById(R.id.convert_currency_converter_spinner)
+        val convertCurrencyValueConverter: TextView = view.findViewById(R.id.convert_currency_value_converter)
+        val switchButtonConverter: ImageButton = view.findViewById(R.id.switch_button_converter)
+        val button: Button = view.findViewById(R.id.button) // chernovik
 
-        base_currency_converter.visibility = View.INVISIBLE
-        base_currency_value_converter.visibility = View.INVISIBLE
-        convert_currency_converter.visibility = View.INVISIBLE
-        convert_currency_value_converter.visibility = View.INVISIBLE
-        switch_button_converter.visibility = View.INVISIBLE
+        // Spinner
+        val arrayAdapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,currencies)
+        baseCurrencyConverterSpinner.adapter = arrayAdapter
+        convertCurrencyConverterSpinner.adapter = arrayAdapter
+        baseCurrencyConverterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                mBaseCurrency = p2
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+        }
+        convertCurrencyConverterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                mConvertCurrency = p2
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+        }
 
-        getDataFromApi()
+        button.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(p0: View?) {
+                getDataFromApi()
+            }
+        })
 
-        switch_button_converter.setOnClickListener{
-            isSwitchButtonPressed = true
-            getDataFromApi()
+        switchButtonConverter.setOnClickListener{
 
-            // Switch currencies
-            placeholderCurrency = baseCurrency
-            baseCurrency = convertCurrency
-            convertCurrency = placeholderCurrency!!
+            var placeHolder: Int
+            placeHolder = mBaseCurrency
+            mBaseCurrency = mConvertCurrency
+            mConvertCurrency = placeHolder
 
-            if (isSwitchButtonPressed) {
+            if (!isSwitchButtonPressed) {
+                isSwitchButtonPressed = true
 
-                baseCurrencyValueWhenSwitchButtonPressed = baseCurrencyValue
-                convertCurrencyValueWhenSwitchButtonPressed = convertCurrencyValue
+                baseCurrencyValueWhenSwitchButtonPressed = mBaseCurrencyValue
+                convertCurrencyValueWhenSwitchButtonPressed = mConvertCurrencyValue
 
-                convertCurrencyValue = baseCurrencyValue!!.div(convertCurrencyValue!!)
-                convert_currency_value_converter.text = convertCurrencyValue.toString()
-
+                mConvertCurrencyValue = mBaseCurrencyValue!!.div(mConvertCurrencyValue!!)
             } else {
-
                 isSwitchButtonPressed = false
 
-                baseCurrencyValue= baseCurrencyValueWhenSwitchButtonPressed
-                convertCurrencyValue = convertCurrencyValueWhenSwitchButtonPressed
-                convert_currency_value_converter.text = convertCurrencyValue.toString()
-
-
+                mBaseCurrencyValue = baseCurrencyValueWhenSwitchButtonPressed
+                mConvertCurrencyValue = convertCurrencyValueWhenSwitchButtonPressed
             }
 
-            Log.d(TAG, "onCreateView: baseCurrencyValue: " + baseCurrencyValue)
-            Log.d(TAG, "onCreateView: convertCurrencyValue: " + convertCurrencyValue)
+            convert_currency_value_converter.text = roundDecimal(mConvertCurrencyValue).toString()
+            baseCurrencyConverterSpinner.setSelection(mBaseCurrency,true)
+            convertCurrencyConverterSpinner.setSelection(mConvertCurrency,true)
 
+            Log.d(TAG, "onCreateView: baseCurrencyValue: " + mBaseCurrencyValue)
+            Log.d(TAG, "onCreateView: convertCurrencyValue: " + mConvertCurrencyValue)
         }
 
         return view
@@ -111,19 +133,41 @@ class ConvertFragment : Fragment() {
 
                 Log.d(TAG, "onDataCompleteFromAPI: Response: " + it.body()?.rates)
 
-                base_currency_converter.text = baseCurrency
-                base_currency_value_converter.text = baseCurrencyValue.toString()
-                convert_currency_converter.text = convertCurrency
+                //base_currency_converter_spinner.text = baseCurrency
+                base_currency_value_converter.text = mBaseCurrencyValue.toString()
+                //convert_currency_converter_spinner.text = convertCurrency
 
                 // Switch
                 when (true) {
-                    convertCurrency == "TRY" -> convertCurrencyValue = it.body()?.rates?.TRY as Double?
-                    convertCurrency == "KGS" -> convertCurrencyValue = it.body()?.rates?.KGS as Double?
+                    mConvertCurrency == 0 -> mConvertCurrencyValue = it.body()?.rates?.USD as Double?
+                    mConvertCurrency == 1 -> mConvertCurrencyValue = it.body()?.rates?.AED as Double?
+                    mConvertCurrency == 2 -> mConvertCurrencyValue = it.body()?.rates?.AMD as Double?
+                    mConvertCurrency == 3 -> mConvertCurrencyValue = it.body()?.rates?.AUD as Double?
+                    mConvertCurrency == 4 -> mConvertCurrencyValue = it.body()?.rates?.AZN as Double?
+                    mConvertCurrency == 5 -> mConvertCurrencyValue = it.body()?.rates?.BCH as Double?
+                    mConvertCurrency == 6 -> mConvertCurrencyValue = it.body()?.rates?.BGN as Double?
+                    mConvertCurrency == 7 -> mConvertCurrencyValue = it.body()?.rates?.BTC as Double?
+                    mConvertCurrency == 8 -> mConvertCurrencyValue = it.body()?.rates?.CUC as Double?
+                    mConvertCurrency == 9 -> mConvertCurrencyValue = it.body()?.rates?.CZK as Double?
+                    mConvertCurrency == 10 -> mConvertCurrencyValue = it.body()?.rates?.EOS as Double?
+                    mConvertCurrency == 11 -> mConvertCurrencyValue = it.body()?.rates?.ETH as Double?
+                    mConvertCurrency == 12 -> mConvertCurrencyValue = it.body()?.rates?.TRY as Double?
+                    mConvertCurrency == 13 -> mConvertCurrencyValue = it.body()?.rates?.IDR as Double?
+                    mConvertCurrency == 14 -> mConvertCurrencyValue = it.body()?.rates?.ILS as Double?
+                    mConvertCurrency == 15 -> mConvertCurrencyValue = it.body()?.rates?.JPY as Double?
+                    mConvertCurrency == 16 -> mConvertCurrencyValue = it.body()?.rates?.KGS as Double?
+                    mConvertCurrency == 17 -> mConvertCurrencyValue = it.body()?.rates?.KZT as Double?
+                    mConvertCurrency == 18 -> mConvertCurrencyValue = it.body()?.rates?.PLN as Double?
+                    mConvertCurrency == 19 -> mConvertCurrencyValue = it.body()?.rates?.TRY as Double?
+                    mConvertCurrency == 21 -> mConvertCurrencyValue = it.body()?.rates?.XAG as Double?
+                    mConvertCurrency == 22 -> mConvertCurrencyValue = it.body()?.rates?.XAU as Double?
                     else -> {
                         Toast.makeText(context, "currency not found", Toast.LENGTH_SHORT).show()
                     }
                 }
-                convert_currency_value_converter.text = String.format("%.5f",convertCurrencyValue)
+
+                convert_currency_value_converter.text = roundDecimal(mConvertCurrencyValue).toString()
+                Log.d(TAG, "getDataFromApi: coroutines")
 
                 viewVisible()
 
@@ -135,24 +179,28 @@ class ConvertFragment : Fragment() {
         })
     }
 
+    private fun roundDecimal(doubleValue: Double?): Double {
+        return Math.round(doubleValue?.times(100000.0)!!) / 100000.0
+    }
+
     private fun viewVisible() {
-        base_currency_converter.visibility = View.VISIBLE
+        base_currency_converter_spinner.visibility = View.VISIBLE
         base_currency_value_converter.visibility = View.VISIBLE
-        convert_currency_converter.visibility = View.VISIBLE
+        convert_currency_converter_spinner.visibility = View.VISIBLE
         convert_currency_value_converter.visibility = View.VISIBLE
         switch_button_converter.visibility = View.VISIBLE
         progress_bar_converter.visibility = View.INVISIBLE
     }
 
     private fun viewInVisible() {
-        if (base_currency_converter!=null) {
-            base_currency_converter.visibility = View.INVISIBLE
+        if (base_currency_converter_spinner !=null) {
+            base_currency_converter_spinner.visibility = View.INVISIBLE
         }
-        if (base_currency_value_converter!=null) {
+        if (base_currency_value_converter !=null) {
             base_currency_value_converter.visibility = View.INVISIBLE
         }
-        if (convert_currency_converter !=null) {
-            convert_currency_converter.visibility = View.INVISIBLE
+        if (convert_currency_converter_spinner !=null) {
+            convert_currency_converter_spinner.visibility = View.INVISIBLE
         }
         if (convert_currency_value_converter !=null) {
             convert_currency_value_converter.visibility = View.INVISIBLE
