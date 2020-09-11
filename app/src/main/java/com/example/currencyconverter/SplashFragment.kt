@@ -17,6 +17,7 @@ class SplashFragment : Fragment() {
     ): View? {
 
         Handler().postDelayed({
+
                 findNavController().navigate(R.id.action_splashFragment_to_viewPagerFragment)
 
         }, 1500)

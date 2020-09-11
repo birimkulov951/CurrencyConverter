@@ -7,114 +7,133 @@
     android:background="@color/colorAccent2"
     tools:context=".fragments.ConvertFragment">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/line1_converter"
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:orientation="vertical">
+            android:padding="15dp"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/base_currency_value_converter"
+            <LinearLayout
+                android:id="@+id/line1_converter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="5.76"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:textStyle="normal"
-                android:fontFamily="serif"
-                android:gravity="center"
-                android:padding="10dp"/>
+                android:orientation="vertical"
+                android:padding="10dp">
 
-            <Spinner
-                android:id="@+id/base_currency_converter_spinner"
+                <EditText
+                    android:id="@+id/base_currency_value_converter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:fontFamily="serif"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:padding="10dp"
+                    android:text="1.0"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="normal" />
+
+                <Spinner
+                    android:id="@+id/base_currency_converter_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="serif"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:popupBackground="@color/colorPrimaryDark"
+                    android:popupElevation="6dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="normal" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/switch_button_converter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/line1_converter"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorAccent2"
+                android:src="@drawable/ic_switched_60" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_converter"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/line1_converter"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible" />
+
+            <!--  <Button
+                android:id="@+id/button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/line1_converter"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@+id/progress_bar_converter"/>-->
+
+            <LinearLayout
+                android:id="@+id/line2_converter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:textStyle="normal"
-                android:fontFamily="serif"
-                android:gravity="center"
-                android:padding="10dp"/>
+                android:layout_below="@+id/switch_button_converter"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/convert_currency_value_converter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:fontFamily="serif"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:padding="10dp"
+                    android:text="1.0"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="normal" />
 
-        <ImageButton
-            android:id="@+id/switch_button_converter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_switched_60"
-            android:background="@color/colorAccent2"
-            android:layout_below="@+id/line1_converter"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+                <Spinner
+                    android:id="@+id/convert_currency_converter_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="serif"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:popupBackground="@color/colorPrimaryDark"
+                    android:popupElevation="6dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:textStyle="normal" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar_converter"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_below="@+id/line1_converter"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:visibility="invisible"/>
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <Button
-            android:id="@+id/button"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_below="@+id/line1_converter"
-            android:layout_centerHorizontal="true"
+            android:id="@+id/button_generate_notification_convert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_toEndOf="@+id/progress_bar_converter"/>
+            android:text="@string/generate_notification_for_this_pair"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
-       <LinearLayout
-           android:id="@+id/line2_converter"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:padding="10dp"
-           android:layout_below="@+id/switch_button_converter"
-           android:orientation="vertical">
-
-           <TextView
-               android:id="@+id/convert_currency_value_converter"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:text="3.76"
-               android:textColor="@android:color/black"
-               android:textSize="22sp"
-               android:textStyle="normal"
-               android:fontFamily="serif"
-               android:gravity="center"
-               android:padding="10dp"/>
-
-           <Spinner
-               android:id="@+id/convert_currency_converter_spinner"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:layout_gravity="center"
-               android:textColor="@android:color/black"
-               android:textSize="22sp"
-               android:textStyle="normal"
-               android:fontFamily="serif"
-               android:gravity="center"
-               android:padding="10dp"/>
-
-       </LinearLayout>
-
-    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

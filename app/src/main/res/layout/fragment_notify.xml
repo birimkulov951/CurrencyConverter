@@ -1,14 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent2"
     tools:context=".fragments.NotifyFragment">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/line1_notify"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Notify fragment" />
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="When  "
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/first_currency_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="USD"
+            android:textColor="@android:color/holo_purple"
+            android:textSize="22sp"
+            android:textStyle="italic"
+            android:layout_toEndOf="@id/text1"/>
+
+        <TextView
+            android:id="@id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  is greater than "
+            android:textSize="22sp"
+            android:layout_toEndOf="@id/first_currency_notify"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/line2_notify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/line1_notify"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/second_currency_value_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="80.0"
+            android:textColor="@android:color/holo_purple"
+            android:textSize="22sp"
+            android:textStyle="italic"
+            android:padding="15dp"/>
+
+        <TextView
+            android:id="@+id/second_currency_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KGS"
+            android:textColor="@android:color/holo_purple"
+            android:textSize="22sp"
+            android:textStyle="italic"
+            android:layout_toEndOf="@id/second_currency_value_notify"
+            android:layout_centerVertical="true"
+            android:padding="15dp"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity=""
+        android:text="Notify me"
+        android:layout_below="@id/line2_notify"
+        android:padding="15dp"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
