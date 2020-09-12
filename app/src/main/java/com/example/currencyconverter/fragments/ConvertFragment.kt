@@ -149,8 +149,7 @@ class ConvertFragment : Fragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 placeholderValue = mConvertCurrencyValue
-                mConvertCurrencyValue =
-                    convertCurrencyValueConverterEditText?.text.toString().toDouble()
+                mConvertCurrencyValue = convertCurrencyValueConverterEditText?.text.toString().toDouble()
                 Log.i(
                     TAG,
                     "INFO: mBaseCurrency: " + mBaseCurrency + " . mConvertCurrency: " + mConvertCurrency

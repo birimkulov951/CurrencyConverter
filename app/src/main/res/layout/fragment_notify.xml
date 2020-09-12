@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="When  "
+            android:padding="15dp"
             android:textSize="22sp" />
 
         <TextView
@@ -28,6 +29,7 @@
             android:textColor="@android:color/holo_purple"
             android:textSize="22sp"
             android:textStyle="italic"
+            android:padding="15dp"
             android:layout_toEndOf="@id/text1"/>
 
         <TextView
@@ -36,7 +38,9 @@
             android:layout_height="wrap_content"
             android:text="  is greater than "
             android:textSize="22sp"
-            android:layout_toEndOf="@id/first_currency_notify"/>
+            android:layout_below="@id/text1"
+            android:layout_centerHorizontal="true"
+            android:padding="15dp"/>
 
 
     </RelativeLayout>

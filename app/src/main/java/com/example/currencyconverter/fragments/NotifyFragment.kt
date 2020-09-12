@@ -16,10 +16,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RemoteViews
-import android.widget.Toast
+import android.widget.*
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -27,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.liveData
+import com.example.currencyconverter.CoroutineLatch
 import com.example.currencyconverter.R
 import com.example.currencyconverter.model.CurrencyData
 import com.example.currencyconverter.model.Rates
@@ -35,11 +33,8 @@ import com.example.currencyconverter.retrofit.RetrofitService
 import kotlinx.android.synthetic.main.custom_notify.*
 import kotlinx.android.synthetic.main.fragment_notify.*
 import kotlinx.android.synthetic.main.fragment_notify.view.*
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.internal.notify
 import retrofit2.Response
 import java.util.*
@@ -50,6 +45,7 @@ class NotifyFragment : Fragment() {
     private val TAG = "NotifyFragment"
 
     private lateinit var retService: RetrofitService
+    private var latch =  CoroutineLatch(1)
 
     private var currencies = arrayOf(
         "United States Dollar",
@@ -95,18 +91,11 @@ class NotifyFragment : Fragment() {
         // Inflate the layout for this fragment
         val view :View = inflater.inflate(R.layout.fragment_notify, container, false)
 
+        var first: TextView = view.findViewById(R.id.first_currency_notify)
+        var second: TextView = view.findViewById(R.id.second_currency_notify)
 
-        if (arguments != null) {
+        getDataFromApi()
 
-            mFirstCurrencyName = arguments?.getString("BASE_CURRENCY")
-            mSecondCurrencyName = arguments?.getString("CONVERT_CURRENCY")
-
-            Log.d(TAG, "passData: BASE_CURRENCY: $mFirstCurrencyName")
-            Log.d(TAG, "passData: BASE_CURRENCY: $mSecondCurrencyName")
-
-            view.first_currency_notify?.text = getCurrencyDataByID(mFirstCurrencyName?.toInt()).toString()
-            view.second_currency_notify?.text = getCurrencyDataByID(mSecondCurrencyName?.toInt()).toString()
-        }
 
         alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -116,6 +105,7 @@ class NotifyFragment : Fragment() {
 
         notifyButton.setOnClickListener{
 
+            Log.d(TAG, "onCreateView: ")
             notificationID += 1
 
             CoroutineScope(IO).launch {
@@ -124,18 +114,24 @@ class NotifyFragment : Fragment() {
 
                     val job1 = launch{
 
-                        while (isActive || System.currentTimeMillis() < apiLastUpdatedTime!!+1800000) {
+                        while (isActive) {
+
+                            var compareFirst = getCurrencyDataByID(mFirstCurrencyName?.toInt()).toString()
+                            var compareSecond = getCurrencyDataByID(mSecondCurrencyName?.toInt()).toString()
 
                             // if user's condition is true send notification
-                            if (getCurrencyDataByID(mFirstCurrencyName?.toInt())!! >= second_currency_value_notify?.text.toString().toDouble()) {
+                            if (compareSecond.toDouble() >= second_currency_value_notify?.text.toString().toDouble()) {
 
-                                val notifyText =  "Now 1 $mFirstCurrencyName is greater than $second_currency_value_notify $mSecondCurrencyName" + "s"
+                                val notifyText =  "Now 1 $mFirstCurrencyName is greater than ${second_currency_value_notify.toString().toInt()} $mSecondCurrencyName" + "s"
 
                                 sendNotification(notifyText)
                             }
 
                             Thread.sleep(1800000)
+                            // Updates data
+                            getDataFromApi()
 
+                            Thread.sleep(5000)
                         }
                     }
 
@@ -144,7 +140,6 @@ class NotifyFragment : Fragment() {
             }
         }
 
-        getDataFromApi()
 
         return view
     }
@@ -219,11 +214,27 @@ class NotifyFragment : Fragment() {
 
         responseLiveData.observe(requireActivity(), Observer {
             if (it.isSuccessful) {
+
                 Log.d(TAG, "onDataCompleteFromAPI: Response222: " + it.body()?.rates)
                 // adds api response to custom global array
                 apiData.clear()
                 apiData.add(it.body()?.rates!!)
                 apiLastUpdatedTime = it.body()?.updated.toString().toLong()
+
+
+                if (arguments != null) {
+                    mFirstCurrencyName = arguments?.getString("BASE_CURRENCY")
+                    mSecondCurrencyName = arguments?.getString("CONVERT_CURRENCY")
+
+                    Log.d(TAG, "passData: BASE_CURRENCY: $mFirstCurrencyName")
+                    Log.d(TAG, "passData: BASE_CURRENCY: $mSecondCurrencyName")
+
+                    first_currency_notify?.text = currencies[mFirstCurrencyName.toString().toInt()]
+                    second_currency_notify?.text = currencies[mSecondCurrencyName.toString().toInt()]
+
+                }
+
+
             } else {
 
                 Toast.makeText(context, "sorry, server problems...", Toast.LENGTH_SHORT).show()
